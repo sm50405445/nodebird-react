@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "build":"next build",
-    "start":"next start"
+    "build": "next build",
+    "start": "next start"
   },
   "author": "LSM",
   "license": "MIT",
   "dependencies": {
+    "antd": "^4.2.0",
     "next": "^9.3.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
