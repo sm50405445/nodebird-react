@@ -7,3 +7,13 @@
 </pre>
 
 usecallback 감싸는 기준 : 자식 컴포넌트에 넘기는 함수
+
+Redux(state) -> React state 안써도 됨
+
+state 한곳에서 관리 따라서 안정성 및 state통제 용이
+
+store는 state, action, reducer 전부가 합쳐진 개념
+
+Action -> state 바꾸는 행동
+Dispatch -> Action 실행
+Reducer -> Action의 결과로 state 어떻게 바꿀지 정의
