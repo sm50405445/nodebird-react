@@ -1,18 +1,25 @@
-export const initialState = {
-    isLoggedIn:false,
-    user:{},
+const dummyUser = {
+    nickname:'이상민',
+    Post:[],
+    Followings:[],
+    Followers:[],
 }
 
-const LOG_IN = 'LOG_IN' //액션 이름
-const LOG_OUT = 'LOG_OUT'
+export const initialState = {
+    isLoggedIn:false,
+    user:null,
+}
 
-const loginAction = {
+export const LOG_IN = 'LOG_IN' //액션 이름
+export const LOG_OUT = 'LOG_OUT'
+
+export const loginAction = {
     type:LOG_IN,
     data:{
         nickname:'이상민'
     }
 }
-const logoutAction = {
+export const logoutAction = {
     type:LOG_OUT,
 }
 
@@ -22,7 +29,7 @@ export default (state=initialState,action) =>{
             return{
                 ...state,
                 isLoggedIn:true,
-                user:action.data,
+                user:dummyUser,
             }
         }
         case LOG_OUT:{

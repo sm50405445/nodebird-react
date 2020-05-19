@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import withRedux from 'next-redux-wrapper'
 import {Provider} from 'react-redux'
 import reducer from '../reducers'
-import { createStore } from 'redux'
+import { createStore, compose,applyMiddleware } from 'redux'
 
 const NodeBird = ({Component,store}) => {
     return(
@@ -26,7 +26,12 @@ NodeBird.propTypes = {
 }
 
 export default withRedux((initialState,options)=>{
-    const store = createStore(reducer,initialState);
     // 여기에다가 store 커스터마이징
+    const middlewares = []; //action 과 store 사이에서 동작
+    const enhancer = compose( //기존 devtool에 __REDUX_DEVTOOLS_EXTENSION__ 합성해서 추가함
+        applyMiddleware(...middlewares),
+        !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f)=>f,
+    );
+    const store = createStore(reducer,initialState,enhancer);
     return store;
 })(NodeBird); //NodeBird 컴포넌트에 props로 store 넣어줌
