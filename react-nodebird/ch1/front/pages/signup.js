@@ -1,6 +1,8 @@
 import React,{useState,useCallback,memo} from 'react'
 import {Form, Input,Checkbox, Button} from 'antd'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { signUpAction } from '../reducers/user'
 
 // const TextInput = memo(({value,onChange}) => {
 //     return(
@@ -35,6 +37,7 @@ const Signup = () =>{
     const [id,onChangeId] = useInput('')
     const [nick,onChangeNick] = useInput('')
     const [password,onChangePassword] = useInput('')
+    const dispatch = useDispatch()
 
     const onSubmit = useCallback(() => {
         if(password !== passwordCheck){
@@ -42,7 +45,13 @@ const Signup = () =>{
         }
         if(!term){
             return setTermError(true)
-        }  
+        }
+        
+        dispatch(signUpAction({
+            id,
+            password,
+            nick,
+        }))
     },[password,passwordCheck,term])
 
     const onChangePasswordChk = useCallback((e) => {

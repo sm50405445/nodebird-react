@@ -17,3 +17,10 @@ store는 state, action, reducer 전부가 합쳐진 개념
 Action -> state 바꾸는 행동
 Dispatch -> Action 실행
 Reducer -> Action의 결과로 state 어떻게 바꿀지 정의
+
+리덕스는 동기적 프로그래밍
+리덕스사가가 필요
+
+function* 무한 혹은 비동기함수
+
+currying 기법이란? 인자 하나를 받아 다른 함수를 리턴

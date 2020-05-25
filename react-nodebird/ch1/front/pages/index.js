@@ -34,6 +34,10 @@ const Home = () => {
     );
 };
 
+function* generator(){
+    
+}
+
 // function mapStateToProps(state){
 //     return{
 //         user:state.user,
