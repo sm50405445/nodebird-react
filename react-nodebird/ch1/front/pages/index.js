@@ -9,9 +9,16 @@ import {loginAction,logoutAction} from '../reducers/user'
 // const Home = ({user,dispatch,login,logout}) => {
 const Home = () => {
     // const dispatch = useDispatch()
-    const user = useSelector(state=>state.user.user) //전체 state 즉 setState
-    const isLoggedIn = useSelector(state=>state.user.isLoggedIn)
+    // const user = useSelector(state=>state.user.user) //전체 state 즉 setState
+    const {isLoggedIn,user} = useSelector(state=>state.user)
     const {mainPosts} = useSelector(state=>state.post)
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch({
+            type:'HELLO_SAGA',
+        })
+    },[])
 
     // useEffect(() => {
     //     // login()
@@ -23,7 +30,6 @@ const Home = () => {
     // }, []); //dep아무것도 없으면 componentDidMount
     return(
         <div>
-            {user ? <div>로그인 했습니다: {user.nickname}</div>:<div>로그아웃 했습니다.</div>}
             {isLoggedIn && <PostForm/>}
             {mainPosts.map((c,i)=>{
                 return(
@@ -33,10 +39,6 @@ const Home = () => {
         </div>
     );
 };
-
-function* generator(){
-    
-}
 
 // function mapStateToProps(state){
 //     return{

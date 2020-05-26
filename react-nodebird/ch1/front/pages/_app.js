@@ -27,6 +27,7 @@ NodeBird.propTypes = {
     store: PropTypes.object
 }
 
+
 export default withRedux((initialState,options)=>{
     // 여기에다가 store 커스터마이징
     const sagaMiddleware = createSagaMiddleware()

@@ -24,3 +24,15 @@ Reducer -> Action의 결과로 state 어떻게 바꿀지 정의
 function* 무한 혹은 비동기함수
 
 currying 기법이란? 인자 하나를 받아 다른 함수를 리턴
+
+high order component 
+const hoc = (Component) = () =>{
+    기존 컴포넌트에 props 같은 것을 추가하여 다른 동작을 하게 함
+}
+
+function* generator(){
+    yield console.log(1)
+}
+
+const gen = generator()
+gen.next() // 1
