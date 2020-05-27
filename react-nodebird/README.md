@@ -36,3 +36,6 @@ function* generator(){
 
 const gen = generator()
 gen.next() // 1
+
+takeEvery = while(true)
+takeLatest = 이전 요청이 끝나지 않은게 있다면 이전 요청을 취소합니다 즉 여러개 요청중 마지막 요청만

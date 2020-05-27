@@ -18,6 +18,12 @@ const Home = () => {
         dispatch({
             type:'HELLO_SAGA',
         })
+        dispatch({
+            type:'HELLO_SAGA',
+        })
+        dispatch({
+            type:'HELLO_SAGA',
+        })
     },[])
 
     // useEffect(() => {
