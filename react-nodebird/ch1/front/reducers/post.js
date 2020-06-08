@@ -10,6 +10,15 @@ export const initialState = {
     imagePaths: [], //미리보기 이미지 경로
     addPostErrorReason: false, //포스트 업로드 실패사유
     isAddingPost: false, //포스트 업로드 중
+    postAdded:false, //포스트 업로드 성공
+}
+
+const dummyPost = {
+    User:{
+        id:1,
+        nickname:'제로초'
+    },
+    content:'나는 더미 입니다'
 }
 
 export const LOAD_MAIN_POSTS_REQUEST = 'LOAD_MAIN_POSTS_REQUEST'
@@ -72,13 +81,25 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case ADD_POST_REQUEST: {
             return {
-                ...state
+                ...state,
+                isAddingPost:true,
+                addPostErrorReason:'',
+                postAdded:false,
             }
         }
         case ADD_POST_SUCCESS: {
             return {
                 ...state,
-                mainPosts: [action.data, ...state.mainPosts]
+                isAddingPost:false,
+                mainPosts:[dummyPost,...state.mainPosts],
+                postAdded:true
+            }
+        }
+        case ADD_POST_FAILURE: {
+            return {
+                ...state,
+                isAddingPost:false,
+                addPostErrorReason:action.error,
             }
         }
         default: {

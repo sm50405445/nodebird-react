@@ -1,8 +1,9 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, useEffect,memo } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { signUpAction, SIGN_UP_REQUEST } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router'
+import { isSigningUp, SIGN_UP_REQUEST } from '../reducers/user';
 
 // const TextInput = memo(({value,onChange}) => {
 //     return(
@@ -14,7 +15,7 @@ const TextInput = ({ value }) => {
   return <div>{value}</div>;
 };
 TextInput.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.number,
 };
 
 export const useInput = (initValue = null) => {
@@ -35,6 +36,13 @@ const Signup = () => {
   const [nick, onChangeNick] = useInput('');
   const [password, onChangePassword] = useInput('');
   const dispatch = useDispatch();
+  const { isSigningUp,me } = useSelector(state => state.user)
+
+  useEffect(()=>{
+    if(me){
+      Router.push('/')
+    }
+  },[me && me.id])
 
   const onSubmit = useCallback(() => {
     if (password !== passwordCheck) {
@@ -125,7 +133,7 @@ const Signup = () => {
           )}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={isSigningUp}>
             가입하기
           </Button>
         </div>
