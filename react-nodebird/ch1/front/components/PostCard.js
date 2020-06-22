@@ -1,5 +1,5 @@
-import React,{useState, useCallback} from 'react';
-import { Form, Input, Button, Card, Avatar,Comment } from 'antd';
+import React,{useState, useCallback,useEffect} from 'react';
+import { Form, Input, Button, Card, Avatar,Comment,List } from 'antd';
 import {
   RetweetOutlined,
   HeartOutlined,
@@ -8,13 +8,13 @@ import {
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { useSelector,useDispatch } from 'react-redux';
-import { List } from 'antd/lib/form/Form';
 import { ADD_COMMENT_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
   const [commentFormOpened,setCommentFormOpened] = useState(false)
   const [commentText,setCommentText] = useState('')
   const {me} = useSelector(state=>state.user)
+  const {commentAdded,isAddingComment} = useSelector(state=>state.post)
   const dispatch = useDispatch();
 
   const onToggleComment =  useCallback(() => {
@@ -27,8 +27,15 @@ const PostCard = ({ post }) => {
     }
     return dispatch({
       type: ADD_COMMENT_REQUEST,
+      data:{
+        postId: post.id,
+      }
     })
-  },[])
+  },[me && me.id])
+
+  useEffect(()=>{
+    setCommentText('')
+  },[commentAdded===true])
 
   const onChangeCommentText = useCallback((e) => {
     setCommentText(e.target.value)
@@ -59,17 +66,17 @@ const PostCard = ({ post }) => {
             <Form.Item>
               <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText}></Input.TextArea>
             </Form.Item>
-            <Button type="primary" htmlType="submit">삐약</Button>
+            <Button type="primary" htmlType="submit" loading={isAddingComment}>삐약</Button>
           </Form>
           <List 
             header={`${post.Comments?post.Comments.length:0}댓글`}
             itemLayout="horizontal"
-            dataSource={post.Comment||[]}
-            renderItem={Item=>(
+            dataSource={post.Comments||[]}
+            renderItem={item=>(
               <li>
                 <Comment 
                   author={item.User.nickname}
-                  avatar={<Avatar>${item.User.nickname[0]}</Avatar>}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
                   content={item.content}
                   datetime={item.createdAt}
                 />
