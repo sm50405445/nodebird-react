@@ -28,13 +28,14 @@ function* watchLogin() {
   yield takeEvery(LOG_IN_REQUEST, login);
 }
 
-function* signUpApi() {
-  return axios.post('/signup')
+function* signUpApi(signUpData) {
+  return axios.post('http://localhost:3065/api/user/',signUpData)
 }
 
-function* singUp() {
+function* singUp(action) { //action에 userId nickname 등이 담김
   try {
-    yield call(signUpApi); //동기호출
+    yield call(signUpApi,action.data); //동기호출
+
     yield put({
       //put dispatch 동일 해당 액션 실행
       type: SIGN_UP_SUCCESS,

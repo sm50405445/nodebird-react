@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
-app.post('/',(req,res)=>[
+router.post('/',(req,res)=>[
 
 ])
-app.post('/images',(req,res)=>{
+router.post('/images',(req,res)=>{
 
 })
 
-module.exports = Router
+module.exports = router

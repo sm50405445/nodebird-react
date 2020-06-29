@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
-app.get('/',(req,res)=>[
+router.get('/',(req,res)=>[
 
 ])
 
-module.exports = Router
+module.exports = router
