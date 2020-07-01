@@ -4,7 +4,9 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const dotenv = require('dotenv')
+const passport = require('passport')
 
+const passportConfig = require('./passport')
 const db = require('./models')
 const userAPIRouter = require('./routes/user')
 const postAPIRouter = require('./routes/post')
@@ -13,6 +15,7 @@ const postsAPIRouter = require('./routes/posts')
 dotenv.config()
 const app = express()
 db.sequelize.sync() // 테이블 생성해줌
+passportConfig()
 
 app.use(morgan('dev'))
 app.use(express.json()) // json형식 본문 처리
@@ -28,6 +31,8 @@ app.use(expressSession({
         secure:false, //httsp쓸때 true
     },
 }))
+app.use(passport.initialize())
+app.use(passport.session()) //express session보다 뒤에 session 사용하기때문
 
 app.use('/api/user',userAPIRouter)
 app.use('/api/post',postAPIRouter)

@@ -2,18 +2,23 @@ import { all, fork, takeLatest, takeEvery, call, put, take, delay, race, cancel,
 import { LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from '../reducers/user';
 import axios from 'axios'
 
-function* loginAPI() {
+axios.defaults.baseURL = 'http://localhost:3065/api';
+
+function loginAPI(loginData) {
   //서버 요청
-  return axios.post('/login')
+  return axios.post('/user/login',loginData)
 }
 
-function* login() {
+function* login(action) {
   try {
-    yield delay(2000)
+    // yield delay(2000)
     // yield call(loginAPI); //동기호출
+    const result = yield call(loginAPI,action.data)
+    console.log('result',result)
     yield put({
       //put dispatch 동일 해당 액션 실행
       type: LOG_IN_SUCCESS,
+      data: result.data,
     });
   } catch (error) {
     //서버 요청 실패
@@ -28,8 +33,8 @@ function* watchLogin() {
   yield takeEvery(LOG_IN_REQUEST, login);
 }
 
-function* signUpApi(signUpData) {
-  return axios.post('http://localhost:3065/api/user/',signUpData)
+function signUpApi(signUpData) {
+  return axios.post('/user/',signUpData)
 }
 
 function* singUp(action) { //action에 userId nickname 등이 담김

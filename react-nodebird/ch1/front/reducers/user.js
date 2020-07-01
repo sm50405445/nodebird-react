@@ -80,11 +80,12 @@ export default (state = initialState, action) => {
             }
         }
         case LOG_IN_SUCCESS: {
+            console.log('actriondata',action.data)
             return {
                 ...state,
                 isLoggingIn: false,
                 isLoggedIn: true,
-                me: dummyUser,
+                me: action.data,
                 isLoading: false,
             }
         }
