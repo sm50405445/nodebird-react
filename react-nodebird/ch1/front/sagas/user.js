@@ -6,7 +6,9 @@ axios.defaults.baseURL = 'http://localhost:3065/api';
 
 function loginAPI(loginData) {
   //서버 요청
-  return axios.post('/user/login',loginData)
+  return axios.post('/user/login',loginData,{
+    withCredentials:true,
+  })
 }
 
 function* login(action) {

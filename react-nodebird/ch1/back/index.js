@@ -20,7 +20,10 @@ passportConfig()
 app.use(morgan('dev'))
 app.use(express.json()) // json형식 본문 처리
 app.use(express.urlencoded({extended:true})) //form 넘어온 데이터 처리
-app.use(cors())
+app.use(cors({
+    origin:true, //요청 주소랑 같게
+    credentials:true, //cors, axios에서도 둘다 해줘야함
+}))
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(expressSession({
     resave:true,
@@ -30,6 +33,7 @@ app.use(expressSession({
         httpOnly:true, //자바스크립트로 쿠키 빼오기 못함
         secure:false, //httsp쓸때 true
     },
+    name:'balpoom'
 }))
 app.use(passport.initialize())
 app.use(passport.session()) //express session보다 뒤에 session 사용하기때문
