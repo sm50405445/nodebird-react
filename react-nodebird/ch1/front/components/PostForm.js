@@ -19,13 +19,16 @@ const PostForm = () => {
   },[postAdded===true])
 
   const onSubmitForm = useCallback(()=>{
+    if(!text || !text.trim()){
+      alert('게시글을 작성해주세요')
+    }
     dispatch({
       type:ADD_POST_REQUEST,
       data:{
-        text,
+        content:text,
       }
     })
-  },[])
+  },[text]) //useCallback 쓸때는 안에 state 쓸때는 그 state 넣어줘야함
 
   const onChangeText = useCallback((e)=>{
     setText(e.target.value)

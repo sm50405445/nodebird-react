@@ -14,10 +14,10 @@ const UserProfile = () => {
   }, []);
   return (
     <Card
-      actions={[
+      actions={me.Posts?[
         <div key="twit">
           짹짹 <br />
-          {me.Post.length}
+          {me.Posts.length}
         </div>,
         <div key="following">
           팔로잉 <br />
@@ -27,7 +27,7 @@ const UserProfile = () => {
           팔로워 <br />
           {me.Followers.length}
         </div>,
-      ]}
+      ]:''}
     >
       <Card.Meta
         avatar={<Avatar>{me.nickname[0]}</Avatar>}
@@ -35,6 +35,7 @@ const UserProfile = () => {
       />
       <Button onClick={onLogout}>로그아웃</Button>
     </Card>
+    
   );
 };
 

@@ -5,6 +5,6 @@ import post from './post';
 export default function* rootSaga() {
   yield all([
     call(user),
-    // call(post)
+    call(post)
   ]);
 }
