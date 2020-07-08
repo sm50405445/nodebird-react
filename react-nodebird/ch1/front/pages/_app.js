@@ -9,7 +9,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
 
-const NodeBird = ({ Component, store }) => {
+const NodeBird = ({ Component, store,pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
@@ -19,7 +19,7 @@ const NodeBird = ({ Component, store }) => {
         />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps}/>
       </AppLayout>
     </Provider>
   );
@@ -28,7 +28,18 @@ const NodeBird = ({ Component, store }) => {
 NodeBird.propTypes = {
   Component: PropTypes.elementType, //렌더링 되는 모든 것들
   store: PropTypes.object,
+  pageProps: PropTypes.object.isRequired
 };
+
+NodeBird.getInitialProps = async(context) => {
+  console.log(context)
+  const {ctx,Component} = context
+  let pageProps
+  if(Component.getInitialProps){ //page들 component인데 각각 컴포넌트 안에 getInitialProps 있으면 실행해줌
+    pageProps = await Component.getInitialProps(ctx)
+  }
+  return {pageProps}
+}
 
 export default withRedux((initialState, options) => {
   // 여기에다가 store 커스터마이징
