@@ -21,6 +21,10 @@ export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST'
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS'
 export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE'
 
+export const LOAD_COMMENTS_REQUEST = 'LOAD_USER_POSTS_REQUEST'
+export const LOAD_COMMENTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS'
+export const LOAD_COMMENTS_FAILURE = 'LOAD_USER_POSTS_FAILURE'
+
 export const REMOVE_IMAGE = 'REMOVE_IMAGE'
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST'
@@ -50,20 +54,6 @@ export const RETWEET_FAILURE = 'RETWEET_FAILURE'
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST'
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS'
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE'
-
-const addPost = {
-    type: ADD_POST_REQUEST,
-}
-const addDummy = {
-    type: ADD_POST_SUCCESS,
-    data: {
-        content: 'Hello',
-        UserId: 1,
-        User: {
-            nickname: '이상민'
-        }
-    }
-}
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -118,19 +108,38 @@ export default (state = initialState, action) => {
                 addCommentErrorReason:action.error,
             }
         }
-        case LOAD_MAIN_POSTS_REQUEST: {
+        case LOAD_COMMENTS_SUCCESS:{
+            const postIndex = state.mainPosts.findIndex(v=>v.id===action.data.postId)
+            const post = state.mainPosts[postIndex]
+            const Comments = action.data.comments
+            const mainPosts = [...state.mainPosts]
+            mainPosts[postIndex] = {...post,Comments}
+            return{
+                ...state,
+                mainPosts,
+            }
+        }
+        case LOAD_COMMENTS_REQUEST:
+        case LOAD_MAIN_POSTS_REQUEST: 
+        case LOAD_HASHTAG_POSTS_REQUEST: 
+        case LOAD_USER_POSTS_REQUEST: {
             return {
                 ...state,
                 mainPosts:[],
             }
         }
-        case LOAD_MAIN_POSTS_SUCCESS: {
+        case LOAD_MAIN_POSTS_SUCCESS: 
+        case LOAD_HASHTAG_POSTS_SUCCESS: 
+        case LOAD_USER_POSTS_SUCCESS: {
             return {
                 ...state,
                 mainPosts:action.data,
             }
         }
-        case LOAD_MAIN_POSTS_FAILURE: {
+        case LOAD_COMMENTS_FAILURE:
+        case LOAD_MAIN_POSTS_FAILURE: 
+        case LOAD_HASHTAG_POSTS_FAILURE: 
+        case LOAD_USER_POSTS_FAILURE: {
             return {
                 ...state,
             }

@@ -1,11 +1,3 @@
-const dummyUser = {
-    nickname: '이상민',
-    Post: [],
-    Followings: [],
-    Followers: [],
-    id:1,
-}
-
 export const initialState = {
     isLoggedOut: false,  //로그아웃 시도중
     isLoggingIn: false, //로그인 시도중
@@ -136,9 +128,15 @@ export default (state = initialState, action) => {
             }
         }
         case LOAD_USER_SUCCESS: {
-            return {
+            if(action.me){
+                return {
+                    ...state,
+                    me:action.data,
+                }
+            }
+            return{ //내가 아닌 다른 사람
                 ...state,
-                me:action.data,
+                userInfo:action.data
             }
         }
         case LOAD_USER_FAILURE: {

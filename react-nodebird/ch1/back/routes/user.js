@@ -37,8 +37,35 @@ router.post('/',async(req,res,next)=>{
         return next(err)
     }
 })
-router.get('/:id',(req,res)=>{
-
+router.get('/:id',async(req,res,next)=>{
+    try{
+        const user = await db.User.findOne({
+            where:{id:parseInt(req.params.id,10)},
+            include:[{
+                model:db.Post,
+                as:'Posts',
+                attributes:["id"]
+            },{
+                model:db.User,
+                as:'Followings',
+                attributes:["id"]
+            },{
+                model:db.User,
+                as:'Followers',
+                attributes:["id"]
+            }],
+            attributes:["id","nickname"]
+        })
+        const jsonUser = user.toJSON()
+        jsonUser.Posts = jsonUser.Post?jsonUser.Post.length:0
+        jsonUser.Followings = jsonUser.Followings?jsonUser.Followings.length:0
+        jsonUser.Followers = jsonUser.Followers?jsonUser.Followers.length:0
+        res.json(jsonUser)
+    }
+    catch(err){
+        console.error(err)
+        next(err)
+    }
 })
 router.post('/logout',(req,res)=>{
     req.logout()
@@ -88,20 +115,36 @@ router.post('/login',(req,res,next)=>[
         })
     })(req,res,next)
 ])
-router.get('/:id/follow',(req,res)=>[
+router.get('/:id/follow',(req,res)=>{
     
-])
-router.post('/:id/follow',(req,res)=>[
+})
+router.post('/:id/follow',(req,res)=>{
     
-])
-router.delete('/:id/follow',(req,res)=>[
+})
+router.delete('/:id/follow',(req,res)=>{
     
-])
-router.delete('/:id/follower',(req,res)=>[
+})
+router.delete('/:id/follower',(req,res)=>{
     
-])
-router.get('/:id/posts',(req,res)=>[
-    
-])
+})
+router.get('/:id/posts',async(req,res,next)=>{
+    try{
+        const posts = await db.Post.findAll({
+            where:{
+                UserId:parseInt(req.params.id,10),
+                RetweetId:null,
+            },
+            include:[{
+                model:db.User,
+                attributes:['id','nickname'],
+            }]
+        })
+        res.json(posts)
+    }
+    catch(err){
+        console.error(err)
+        next(err)
+    }
+})
 
 module.exports = router

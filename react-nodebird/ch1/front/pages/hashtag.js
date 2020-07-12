@@ -7,7 +7,7 @@ import { Card, Avatar } from 'antd'
 
 const Hashtag = ({tag}) => {
     const dispatch = useDispatch()
-    const {mainPosts} =  useSelector(state => state.post)
+    const {mainPosts,userInfo} =  useSelector(state => state.post)
 
     useEffect(()=>{
         dispatch({
@@ -23,7 +23,7 @@ const Hashtag = ({tag}) => {
             actions={[
                 <div key="twit">
                 짹짹 <br />
-                {userInfo.Post}
+                {userInfo.Posts}
                 </div>,
                 <div key="following">
                 팔로잉 <br />

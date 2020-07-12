@@ -100,20 +100,21 @@ function* watchLogout() {
   yield takeEvery(LOG_OUT_REQUEST, logOut);
 }
 
-function loadUserApi(loadUserData) {
+function loadUserApi(userId) {
   //서버는 로그인 여부를 프론트에서 보내는 쿠키로 확인
-  return axios.get('/user/',{
+  return axios.get(userId?`/user/${userId}`:'/user/',{
     withCredentials:true,
   })
 }
 
-function* loadUser() { //action에 userId nickname 등이 담김
+function* loadUser(action) { //action에 userId nickname 등이 담김
   try {
-    const result = yield call(loadUserApi)
+    const result = yield call(loadUserApi,action.data)
     yield put({
       //put dispatch 동일 해당 액션 실행
       type: LOAD_USER_SUCCESS,
       data:result.data,
+      me:!action.data,
     });
   } catch (error) {
     //서버 요청 실패
