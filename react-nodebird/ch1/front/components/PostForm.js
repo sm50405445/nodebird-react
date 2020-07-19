@@ -1,4 +1,4 @@
-import React, { useCallback,useState,useEffect } from 'react';
+import React, { useCallback,useState,useEffect,useRef } from 'react';
 import { Form, Input, Button, Card, Avatar } from 'antd';
 import {
   RetweetOutlined,
@@ -7,12 +7,14 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import { useSelector,useDispatch } from 'react-redux';
-import { ADD_POST_REQUEST } from '../reducers/post';
+import { ADD_POST_REQUEST,UPLOAD_IMAGES_REQUEST,REMOVE_IMAGE } from '../reducers/post';
+
 
 const PostForm = () => {
   const dispatch = useDispatch();
   const [text,setText] = useState('');
   const { imagePaths,isAddingPost,postAdded } = useSelector((state) => state.post);
+  const imageInput = useRef()
 
   useEffect(()=>{
     setText('')
@@ -22,17 +24,43 @@ const PostForm = () => {
     if(!text || !text.trim()){
       alert('게시글을 작성해주세요')
     }
+    const formData = new FormData()
+    imagePaths.forEach((i)=>{
+      formData.append('image',i)
+      formData.append('content',text)
+    })
     dispatch({
       type:ADD_POST_REQUEST,
-      data:{
-        content:text,
-      }
+      data:formData,
     })
-  },[text]) //useCallback 쓸때는 안에 state 쓸때는 그 state 넣어줘야함
+  },[text,imagePaths]) //useCallback 쓸때는 안에 state 쓸때는 그 state 넣어줘야함
 
   const onChangeText = useCallback((e)=>{
     setText(e.target.value)
-  })
+  },[])
+
+  const onChangeImages = useCallback((e)=>{
+    const imageFormData = new FormData()
+    const data = []
+    data.forEach.call(e.target.files,(f)=>{
+      imageFormData.append('image',f)
+    })
+    dispatch({
+      type:UPLOAD_IMAGES_REQUEST,
+      data:imageFormData,
+    })
+  },[])
+
+  const onRemoveImage = useCallback(index=>()=>{ //함수에 괄호 들어있으면 다음과같이 () 추가
+    dispatch({
+      type:REMOVE_IMAGE,
+      index,
+    })
+  },[])
+
+  const onClickImageUpload = useCallback(() => {
+    imageInput.current.click()
+  },[imageInput.current])
   return (
     <Form style={{ margin: '10px 0 10px' }} encType="multipart/form-data" onFinish={onSubmitForm}>
       <Input.TextArea
@@ -42,8 +70,8 @@ const PostForm = () => {
         onChange={onChangeText}
       />
       <div>
-        <input type="file" multiple hidden />
-        <Button>이미지 업로드</Button>
+        <input type="file" multiple hidden ref={imageInput} onChange={onChangeImages}/>
+        <Button onClick={onClickImageUpload}>이미지 업로드</Button>
         <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={isAddingPost}>
           짹짹
         </Button>
@@ -57,7 +85,7 @@ const PostForm = () => {
                 alt={v}
               />
               <div>
-                <Button>제거</Button>
+                <Button onClick={onRemoveImage(i)}>제거</Button>
               </div>
             </div>
         ))}

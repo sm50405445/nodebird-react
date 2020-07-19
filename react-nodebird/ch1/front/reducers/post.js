@@ -55,6 +55,10 @@ export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST'
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS'
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE'
 
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST'
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS'
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE'
+
 export default (state = initialState, action) => {
     switch (action.type) {
         case ADD_POST_REQUEST: {
@@ -70,7 +74,8 @@ export default (state = initialState, action) => {
                 ...state,
                 isAddingPost:false,
                 mainPosts:[action.data,...state.mainPosts],
-                postAdded:true
+                postAdded:true,
+                imagePaths:[],
             }
         }
         case ADD_POST_FAILURE: {
@@ -117,6 +122,28 @@ export default (state = initialState, action) => {
             return{
                 ...state,
                 mainPosts,
+            }
+        }
+        case UPLOAD_IMAGES_REQUEST: {
+            return {
+                ...state,
+            }
+        }
+        case UPLOAD_IMAGES_SUCCESS: {
+            return {
+                ...state,
+                imagePaths:[...state.imagePaths,...action.data],
+            }
+        }
+        case UPLOAD_IMAGES_FAILURE: {
+            return {
+                ...state,
+            }
+        }
+        case REMOVE_IMAGE:{
+            return{
+                ...state,
+                imagePaths:state.imagePaths.filter((v,i)=> i !== action.index)
             }
         }
         case LOAD_COMMENTS_REQUEST:

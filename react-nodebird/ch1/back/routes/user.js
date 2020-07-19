@@ -2,11 +2,12 @@ const express = require('express')
 const db = require('../models')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
+const { isLoggedIn } = require('./middleware')
 
 const router = express.Router()
 
 
-router.get('/',(req,res)=>{
+router.get('/',isLoggedIn,(req,res)=>{
     if(!req.user){
         return res.status(401).send('로그인이 필요합니다')
     }
@@ -137,6 +138,8 @@ router.get('/:id/posts',async(req,res,next)=>{
             include:[{
                 model:db.User,
                 attributes:['id','nickname'],
+            },{
+                model:db.Image,
             }]
         })
         res.json(posts)

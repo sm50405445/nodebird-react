@@ -19,6 +19,7 @@ db.sequelize.sync() // 테이블 생성해줌
 passportConfig()
 
 app.use(morgan('dev'))
+app.use('/',express.static('uploads')) //uploads 폴더 안에 파일을 자유롭게 가져가도록 루트폴더처럼 가져가도록 해줌
 app.use(express.json()) // json형식 본문 처리
 app.use(express.urlencoded({extended:true})) //form 넘어온 데이터 처리
 app.use(cors({
