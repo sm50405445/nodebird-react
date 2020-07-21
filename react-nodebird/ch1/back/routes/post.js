@@ -22,6 +22,7 @@ const upload = multer({
 
 router.post('/',isLoggedIn,upload.none(),async(req,res,next)=>{
     try{
+        console.log('body',req)
         const hashtags = req.body.content.match(/#[^\s]+/g)
         const newPost = await db.Post.create({
             content:req.body.content,
@@ -117,6 +118,36 @@ router.post('/:id/comment',isLoggedIn,async(req,res,next)=>{
             }]
         })
         return res.json(comment)
+    }
+    catch(err){
+        console.error(err)
+        next(err)
+    }
+})
+
+router.post(`/:id/like`,isLoggedIn,async(req,res,next)=>{
+    try{
+        const post = await db.Post.findOne({where:{id:req.params.id}})
+        if(!post){
+            return res.status(404).send('포스트 존재 x')
+        }
+        await post.addLiker(req.user.id)
+        res.json({userId:req.user.id})
+    }
+    catch(err){
+        console.error(err)
+        next(err)
+    }
+})
+
+router.delete(`/:id/like`,isLoggedIn,async(req,res,next)=>{
+    try{
+        const post = await db.Post.findOne({where:{id:req.params.id}})
+        if(!post){
+            return res.status(404).send('포스트 존재 x')
+        }
+        await post.removeLiker(req.user.id)
+        res.json({userId:req.user.id})
     }
     catch(err){
         console.error(err)

@@ -24,6 +24,7 @@ const PostForm = () => {
     if(!text || !text.trim()){
       alert('게시글을 작성해주세요')
     }
+    console.log('text',text)
     const formData = new FormData()
     imagePaths.forEach((i)=>{
       formData.append('image',i)
@@ -36,6 +37,7 @@ const PostForm = () => {
   },[text,imagePaths]) //useCallback 쓸때는 안에 state 쓸때는 그 state 넣어줘야함
 
   const onChangeText = useCallback((e)=>{
+    console.log(e.target.value)
     setText(e.target.value)
   },[])
 
