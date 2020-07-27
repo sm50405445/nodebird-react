@@ -22,7 +22,7 @@ const upload = multer({
 
 router.post('/',isLoggedIn,upload.none(),async(req,res,next)=>{
     try{
-        console.log('body',req)
+        console.log('body',req.body)
         const hashtags = req.body.content.match(/#[^\s]+/g)
         const newPost = await db.Post.create({
             content:req.body.content,
@@ -148,6 +148,54 @@ router.delete(`/:id/like`,isLoggedIn,async(req,res,next)=>{
         }
         await post.removeLiker(req.user.id)
         res.json({userId:req.user.id})
+    }
+    catch(err){
+        console.error(err)
+        next(err)
+    }
+})
+
+router.post('/:id/retweet',isLoggedIn,async(req,res,next)=>{
+    try{
+        const post = await db.Post.findOne({where:{id:req.params.id}})
+        if(!post){
+            return res.status(404).send('포스트 존재 x')
+        }
+        if(req.user.id===post.UserId){
+            return res.status(403).send('자신의 글은 리트윗할 수 없습니다')
+        }
+        const retweetTargetId = post.RetweetId || post.id
+        const exPost = await db.Post.findOne({
+            where:{
+                UserId:req.user.id,
+                RetweetId:retweetTargetId,
+            }
+        })
+        if(exPost){
+            return res.status(403).send('이미 리트윗 했습니다')
+        }
+        const retweet = await db.Post.create({
+            UserId:req.user.id,
+            RetweetId:retweetTargetId,
+            content:'retweet',
+        })
+        const retweetWithPrevPost = await db.Post.findOne({
+            where:{id:retweet.id},
+            include:[{
+                model:db.User,
+                attributes:['id','nickname'],
+            },{
+                model:db.Post,
+                as:'Retweet',
+                include:[{
+                    model:db.User,
+                    attributes:['id','nickname'],
+                },{
+                    model:db.Image,
+                }]
+            }]
+        })
+        res.json(retweetWithPrevPost)
     }
     catch(err){
         console.error(err)

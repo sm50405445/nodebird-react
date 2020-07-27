@@ -28,6 +28,9 @@ import {
     LIKE_POST_FAILURE,
     LIKE_POST_SUCCESS,
     LIKE_POST_REQUEST,
+    RETWEET_SUCCESS,
+    RETWEET_FAILURE,
+    RETWEET_REQUEST,
 } from '../reducers/post'
 
 function addPostAPI(postData){
@@ -270,6 +273,33 @@ function* watchUnlikePost(){
     yield takeEvery(UNLIKE_POST_REQUEST,unLikePost);
 }
 
+function retweetAPI(postId){ //post에서는 데이터가 없더라도 빈객체 넣어주기
+    return axios.post(`/post/${postId}/retweet`,{},{
+        withCredentials:true
+    })
+}
+
+function* retweet(action){
+    try{
+        const result = yield call(retweetAPI,action.data)
+        yield put({
+            type:RETWEET_SUCCESS,
+            data:result.data,
+        })
+    }
+    catch(err){
+        yield({
+            type:RETWEET_FAILURE,
+            error: err,
+        })
+        alert(err.response && err.response.data)
+    }
+}
+
+function* watchRetweet(){
+    yield takeEvery(RETWEET_REQUEST,retweet);
+}
+
 export default function* postSaga(){
     yield all([
         fork(watchLoadMainPosts),
@@ -280,6 +310,7 @@ export default function* postSaga(){
         fork(watchLoadUserPosts),
         fork(watchUploadImages),
         fork(watchLikePost),
-        fork(watchUnlikePost)
+        fork(watchUnlikePost),
+        fork(watchRetweet),
     ])
 }
