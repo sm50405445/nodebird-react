@@ -5,21 +5,11 @@ import { LOAD_USER_POSTS_REQUEST } from '../reducers/post'
 import { LOAD_USER_REQUEST } from '../reducers/user'
 import PostCard from '../components/PostCard'
 
-const User = ({id}) => {
-    const dispatch = useDispatch()
-    const {mainPosts,userInfo} =  useSelector(state => state.post)
+const User = () => {
+    
+    const {mainPosts} =  useSelector(state => state.post)
+    const {userInfo} = useSelector(state=>state.user)
 
-    useEffect(()=>{
-        dispatch({
-            type:LOAD_USER_REQUEST,
-            data:id,
-        })
-        dispatch({
-            type:LOAD_USER_POSTS_REQUEST,
-            data:id,
-        })
-
-    },[])
     return(
         <div>
        {userInfo
@@ -59,8 +49,17 @@ User.propTypes = {
 //getInitialProps componentdidmount보다 먼저 실행됨 가장 최초의 작업 가능
 User.getInitialProps = async(context) => { //context Component 됨
     console.log('user getinitialProps',context.query.id)
+    const id = parseInt(context.query.id)
+    context.store.dispatch({
+        type:LOAD_USER_REQUEST,
+        data:id,
+    })
+    context.store.dispatch({
+        type:LOAD_USER_POSTS_REQUEST,
+        data:id,
+    })
     return{
-        id:parseInt(context.query.id,10) //서버에서 받아서 User에 Prop까지 전달
+        id //서버에서 받아서 User에 Prop까지 전달
     }
 }
 

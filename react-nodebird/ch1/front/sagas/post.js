@@ -32,6 +32,7 @@ import {
     RETWEET_FAILURE,
     RETWEET_REQUEST,
 } from '../reducers/post'
+import {ADD_POST_TO_ME} from '../reducers/user'
 
 function addPostAPI(postData){
     console.log('post',postData)
@@ -48,9 +49,13 @@ function* addPost(action){
             type:ADD_POST_SUCCESS,
             data:result.data,
         })
+        yield put({ //user reducer 데이터 수정
+            type:ADD_POST_TO_ME,
+            data:result.data.id,
+        })
     }
     catch(err){
-        yield({
+        yield put({
             type:ADD_POST_FAILURE,
             error: err,
         })
@@ -86,7 +91,7 @@ function* watchLoadMainPosts(){
 }
 
 function loadHashtagPostsAPI(tag){
-    return axios.get(`/hashtag/${tag}`)
+    return axios.get(`/hashtag/${encodeURIComponent(tag)}`)
 }
 
 function* loadHashtagPosts(action){
@@ -110,7 +115,7 @@ function* watchLoadHashtagPosts(){
 }
 
 function loadUserPostsAPI(id){
-    return axios.get(`/user/${id}/posts`)
+    return axios.get(`/user/${id||0}/posts`)
 }
 
 function* loadUserPosts(action){

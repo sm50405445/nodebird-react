@@ -51,7 +51,11 @@ router.post('/',isLoggedIn,upload.none(),async(req,res,next)=>{
                 model:db.User
             },{
                 model:db.Image,
-            }],
+            }, {
+                model: db.User,
+                as: 'Likers',
+                attributes: ['id'],
+              }],
         })
         console.log('fullPost',fullPost)
         res.json(fullPost)
@@ -69,6 +73,24 @@ router.post('/',isLoggedIn,upload.none(),async(req,res,next)=>{
 router.post('/images',upload.array('image'),(req,res)=>{
     res.json(req.files.map(v=>v.filename)) 
 })
+
+router.get('/:id', async (req, res, next) => {
+    try {
+      const post = await db.Post.findOne({
+        where: { id: req.params.id },
+        include: [{
+          model: db.User,
+          attributes: ['id', 'nickname'],
+        }, {
+          model: db.Image,
+        }],
+      });
+      res.json(post);
+    } catch (e) {
+      console.error(e);
+      next(e);
+    }
+  });
 
 router.get("/:id/comments",async(req,res,next)=>{
     try{
@@ -157,11 +179,17 @@ router.delete(`/:id/like`,isLoggedIn,async(req,res,next)=>{
 
 router.post('/:id/retweet',isLoggedIn,async(req,res,next)=>{
     try{
-        const post = await db.Post.findOne({where:{id:req.params.id}})
+        const post = await db.Post.findOne({
+            where:{id:req.params.id},
+            include:[{
+                model:db.Post,
+                as:'Retweet',
+            }],
+        })
         if(!post){
             return res.status(404).send('포스트 존재 x')
         }
-        if(req.user.id===post.UserId){
+        if(req.user.id===post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)){
             return res.status(403).send('자신의 글은 리트윗할 수 없습니다')
         }
         const retweetTargetId = post.RetweetId || post.id

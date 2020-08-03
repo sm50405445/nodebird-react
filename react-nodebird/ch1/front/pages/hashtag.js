@@ -9,13 +9,6 @@ const Hashtag = ({tag}) => {
     const dispatch = useDispatch()
     const {mainPosts,userInfo} =  useSelector(state => state.post)
 
-    useEffect(()=>{
-        dispatch({
-            type:LOAD_HASHTAG_POSTS_REQUEST,
-            data:tag,
-        })
-
-    },[])
     return(
         <div>
         {userInfo
@@ -54,9 +47,14 @@ Hashtag.propTypes = {
 
 //getInitialProps componentdidmount보다 먼저 실행됨 가장 최초의 작업 가능
 Hashtag.getInitialProps = async(context) => { //context Component 됨
-    console.log('hashtag getinitialProps',context.query.tag)
+    const tag = context.query.tag
+    console.log('hashtag getinitialProps',tag)
+    context.store.dispatch({
+        type:LOAD_HASHTAG_POSTS_REQUEST,
+        data:tag,
+    })
     return{
-        tag:context.query.tag
+        tag
     }
 }
 

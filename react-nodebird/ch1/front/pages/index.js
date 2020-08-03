@@ -18,7 +18,6 @@ const Home = () => {
     dispatch({
       type:LOAD_MAIN_POSTS_REQUEST
     })
-    
   }, []);
 
   // useEffect(() => {
@@ -53,4 +52,12 @@ const Home = () => {
 // }
 
 // export default connect(mapStateToProps,mapDispatchToProps)(Home);
+
+Home.getInitialProps = async(context) => {
+  console.log(Object.keys(context))
+  context.store.dispatch({
+    type:LOAD_MAIN_POSTS_REQUEST,
+  })
+}
+
 export default Home;
